@@ -3,10 +3,10 @@ HOMEPAGE = "http://octoprint.org"
 
 SECTION = "devel/python"
 
-LICENSE = "AGPL-3.0"
+LICENSE = "AGPL-3.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=73f1eb20517c55bf9493b7dd6e480788"
 
-TAG = "1.7.2"
+TAG = "1.10.3"
 
 SRCREV = "${TAG}"
 PV = "${TAG}+git${SRCPV}"
@@ -70,7 +70,9 @@ pkg_postinst:${PN}:append () {
 PYTHON_DEPS = " \
     python3-blinker \
     python3-cachelib \
+    python3-class-doc \
     python3-click \
+    python3-colorlog \
     python3-dateutil \
     python3-emoji \
     python3-feedparser \
@@ -78,13 +80,11 @@ PYTHON_DEPS = " \
     python3-flask \
     python3-flask-assets \
     python3-flask-babel \
+    python3-flask-limiter \
     python3-flask-login \
-    python3-flask-principal \
     python3-frozendict \
     python3-future \
     python3-html \
-    python3-itsdangerous \
-    python3-itsdangerous \
     python3-jinja2 \
     python3-json \
     python3-markdown \
@@ -94,11 +94,11 @@ PYTHON_DEPS = " \
     python3-netifaces \
     python3-netserver \
     python3-numpy \
-    python3-octoprint-filecheck \
-    python3-octoprint-firmwarecheck \
+    python3-passlib \
     python3-pip \
     python3-pkginfo \
     python3-psutil \
+    python3-pydantic \
     python3-pylru \
     python3-pyserial \
     python3-pyyaml \
@@ -115,6 +115,7 @@ PYTHON_DEPS = " \
     python3-werkzeug \
     python3-wrapt \
     python3-zeroconf \
+    python3-zipstream-ng \
 "
 
 DEPENDS += " \
