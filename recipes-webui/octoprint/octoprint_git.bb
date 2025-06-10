@@ -6,7 +6,7 @@ SECTION = "devel/python"
 LICENSE = "AGPL-3.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=73f1eb20517c55bf9493b7dd6e480788"
 
-TAG = "1.10.3"
+TAG = "1.11.2"
 
 SRCREV = "${TAG}"
 PV = "${TAG}+git${SRCPV}"
@@ -24,9 +24,6 @@ inherit python3-dir python3native setuptools3 systemd useradd
 
 do_patch() {
     sed -i -e "s/markdown>=3.1,<3.2/markdown>=3.1/g" ${S}/setup.py
-    sed -i -e "s/markupsafe>=1.1,<2.0/markupsafe>=1.1/g" ${S}/setup.py
-    sed -i -e "s/rsa==4.0/rsa>=4.0/g" ${S}/setup.py
-    sed -i -e "s/tornado==/tornado>=/g" ${S}/setup.py
 }
 
 do_install:append() {
@@ -40,8 +37,8 @@ do_install:append() {
     install -m 0644 ${WORKDIR}/config.yaml ${D}${sysconfdir}/octoprint/config.yaml
     chmod a+rw ${D}${sysconfdir}/octoprint/config.yaml
 
-    install -d ${D}/lib/systemd/system
-    install -m 0644 ${WORKDIR}/octoprint.service ${D}${systemd_unitdir}/system
+    install -d "${D}${systemd_system_unitdir}"
+    install -m 0644 "${WORKDIR}/octoprint.service" "${D}${systemd_system_unitdir}"
 
     install -d ${D}${localstatedir}/lib/octoprint
     chmod a+rw ${D}${localstatedir}/lib/octoprint
@@ -67,13 +64,19 @@ pkg_postinst:${PN}:append () {
         chown -R octoprint $D${sysconfdir}/octoprint
 }
 
+# python stdlib dependencies
+PYTHON_CORE_DEPS = " \
+    python3-core \
+    python3-asyncio \
+    python3-json \
+    python3-logging \
+"
+
 PYTHON_DEPS = " \
-    python3-blinker \
     python3-cachelib \
     python3-class-doc \
     python3-click \
     python3-colorlog \
-    python3-dateutil \
     python3-emoji \
     python3-feedparser \
     python3-filetype \
@@ -84,27 +87,21 @@ PYTHON_DEPS = " \
     python3-flask-login \
     python3-frozendict \
     python3-future \
-    python3-html \
-    python3-jinja2 \
-    python3-json \
     python3-markdown \
-    python3-markupsafe \
-    python3-monotonic \
     python3-netaddr \
     python3-netifaces \
-    python3-netserver \
-    python3-numpy \
+    python3-packaging \
+    python3-pathvalidate \
     python3-passlib \
     python3-pip \
-    python3-pkginfo \
     python3-psutil \
     python3-pydantic \
     python3-pylru \
     python3-pyserial \
+    python3-pytz \
     python3-pyyaml \
     python3-regex \
     python3-requests \
-    python3-rsa \
     python3-sarge \
     python3-semantic-version \
     python3-sentry-sdk \
@@ -124,6 +121,7 @@ DEPENDS += " \
 "
 
 RDEPENDS:${PN} = " \
+    ${PYTHON_CORE_DEPS} \
     ${PYTHON_DEPS} \
     sudo \
 "
